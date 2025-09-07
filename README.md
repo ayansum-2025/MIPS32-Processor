@@ -1,5 +1,5 @@
 # MIPS32-Processor
-A repository of my Verilog codes for the implementation of a RISC-V processor with hazard detection and stalling and forwarding mechanisms to avoid the hazards.
+A repository of my Verilog codes for the implementation of a RISC-V processor with hazard detection and stalling and forwarding mechanisms to avoid data and control hazards.
 
 ## **Pipeline Stages**
 
@@ -13,7 +13,7 @@ A standard MIPS32 pipeline has 5 stages: Instruction Fetch, Instruction Decode, 
 **2. Instruction Decode (ID)**
 * Decodes instructions and reads register values
 
-* Detects hazards and manages stalls
+* Detects hazards and manages stalls if necessary
 
 * Sign-extends immediate values
 
@@ -35,9 +35,9 @@ A standard MIPS32 pipeline has 5 stages: Instruction Fetch, Instruction Decode, 
 * Handles pipeline stopping for HLT instruction
 
 ## **Instruction Set Support**
-The processor supports the following MIPS32 instructions:
+MIPS32 is a word addressable architecture where each word including instruction encodings consist of 32 bits. The processor supports the following MIPS32 instructions:
 
-**1.R-Type Instructions (RR_ALU)**
+**1.R-Type Instructions (RR_ALU)** These instructions involve upto 3 register operands.
 
 * ADD - Add
 
@@ -51,7 +51,7 @@ The processor supports the following MIPS32 instructions:
 
 * MUL - Multiply
 
-**2.I-Type Instructions (RM_ALU)**
+**2.I-Type Instructions (RM_ALU)** These instructions contain a 16-bit immediate data field.
 
 * ADDI - Add Immediate
 
@@ -59,7 +59,7 @@ The processor supports the following MIPS32 instructions:
 
 * SLTI - Set Less Than Immediate
 
-**3.Memory Instructions**
+**3.Memory Instructions** Since we are using a Reduced Instruction Set Computer architecture these are the only instructions that access memory.
 
 * LW - Load Word
 
@@ -75,16 +75,18 @@ The processor supports the following MIPS32 instructions:
 
 ## **Hazard Handling**
 
-**1.Hazard Detection Unit**
+**1.Forwarding Unit:**
+The processor implements a forwarding unit that detects when results from later pipeline stages are needed by earlier instructions and forwards them to avoid stalls.
+
+**2.Stalling**
 Detects load-use hazards that cannot be resolved by forwarding and inserts pipeline stalls (bubbles) when necessary.
 
-**2.Branch Handling:**
+**3.Branch Handling:**
 Manages control hazards by:
 
  * Flushing instructions after taken branches
 
  * Handling branch conditions in the EX stage
 
-**3.Forwarding Unit:**
-The processor implements a forwarding unit that detects when results from later pipeline stages are needed by earlier instructions and forwards them to avoid stalls.
+
 
